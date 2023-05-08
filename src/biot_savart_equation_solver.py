@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.constants import mu_0, pi
 
-from src.coordinate_and_position import CoordinateSystem
-from src.fields import VectorField
+from coordinate_and_position import CoordinateSystem
+from fields import VectorField
 
 
 class BiotSavartEquationSolver:

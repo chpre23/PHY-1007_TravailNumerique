@@ -3,11 +3,11 @@ from typing import Tuple, Union
 import numpy as np
 from scipy.constants import mu_0, pi
 
-from src.biot_savart_equation_solver import BiotSavartEquationSolver
-from src.circuit import Circuit
-from src.coordinate_and_position import CoordinateSystem, Position
-from src.fields import VectorField
-from src.laplace_equation_solver import LaplaceEquationSolver
+from biot_savart_equation_solver import BiotSavartEquationSolver
+from circuit import Circuit
+from coordinate_and_position import CoordinateSystem, Position
+from fields import VectorField
+from laplace_equation_solver import LaplaceEquationSolver
 
 
 class World:

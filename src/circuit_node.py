@@ -1,4 +1,4 @@
-from src.coordinate_and_position import Position
+from coordinate_and_position import Position
 
 
 class CircuitNode:

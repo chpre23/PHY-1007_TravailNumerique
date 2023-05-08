@@ -1,7 +1,8 @@
 import numpy as np
 
-from src.coordinate_and_position import CoordinateSystem
-from src.fields import ScalarField
+from coordinate_and_position import CoordinateSystem
+from fields import ScalarField
+
 
 
 class LaplaceEquationSolver:
@@ -48,6 +49,7 @@ class LaplaceEquationSolver:
             the electrical components and in the empty space between the electrical components, while the field V
             always gives V(x, y) = 0 if (x, y) is not a point belonging to an electrical component of the circuit.
         """
+        # bla bla bla je fais un test
         raise NotImplementedError
 
     def _solve_in_polar_coordinate(
