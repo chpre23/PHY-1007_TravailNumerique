@@ -37,40 +37,19 @@ class BiotSavartEquationSolver:
             B_z(x, y) are the 3 components of the magnetic vector at a given point (x, y) in space. Note that
             B_x = B_y = 0 is always True in our 2D world.
         """
-        def compute_biot_savart(matrix, point):
-            magnetic_field = np.zeros(3)  # Initialize the magnetic field vector
-            
-            a = len(matrix)
-            b = len(matrix)
-            for i in range(len(matrix)):
-                print(len(matrix))
-                for j in range(len(matrix[i])):
-                    print(len(matrix[i]))
-                    current_element = matrix[i][j]
-                    position_vector = np.array([i*delta_x, j*delta_y, 0])  # Assuming a 2D vector field with z-component as 0
-                    
-                    # Calculate the distance between the current element and the given point
-                    distance = np.linalg.norm(point - position_vector)
-                    
-                    if distance != 0 :
-                    # Calculate the contribution to the magnetic field using the Biot-Savart law
-                        magnetic_field += np.cross(current_element, (point - position_vector)) / distance**3
-                    else:
-                        continue      
-            return magnetic_field
-        
-        magnetic_array = np.zeros((electric_current.shape[0], electric_current.shape[1], 3))
-        n = 0
-        for x in range(len(electric_current)):
-            for y in range(len(electric_current[x])):
-                if electric_current[x][y].any() == True:
-                    magnetic_array[x, y] = compute_biot_savart(electric_current, np.array([x*delta_x, y*delta_y, 0]))
-                    print('nb iterations : ', n)
-                    n += 1
+        copy_current = np.copy(electric_current)
+        evaluated_position, magnetic_field, current = np.argwhere(np.linalg.norm(copy_current, axis=2)!=0), np.zeros((copy_current.shape[0], copy_current.shape[1], 3)), copy_current[~np.all(copy_current == 0, axis=2)]
 
-        Vectorfield_mag = VectorField(magnetic_array)
-        return Vectorfield_mag
+        for i in range(magnetic_field.shape[0]):
+            for j in range(magnetic_field.shape[1]):
+                if [i, j] not in evaluated_position.tolist():
+                    vecteur_position = np.array([i, j])
+                    rc = vecteur_position - evaluated_position
+                    rc_norme = np.linalg.norm(rc, axis=1)
+                    matrice_magnetic_field = np.cross(current, rc, axis=1)/rc_norme
+                    magnetic_field[i, j][2] = float(np.sum(matrice_magnetic_field))
 
+        return VectorField(mu_0/(4*pi)*magnetic_field)
 
     def _solve_in_polar_coordinate(
             self,
@@ -99,8 +78,26 @@ class BiotSavartEquationSolver:
             B_z(r, θ) are the 3 components of the magnetic vector at a given point (r, θ) in space. Note that
             B_r = B_θ = 0 is always True in our 2D world.
         """
-        
-        raise NotImplementedError
+        copy_current = np.copy(electric_current)
+        evaluated_position = np.argwhere(np.linalg.norm(copy_current, axis=2)!=0)
+        theta = evaluated_position[:, 1]*delta_theta
+        magnetic_field = np.zeros((copy_current.shape[0], copy_current.shape[1], 3))
+
+        current = copy_current[~np.all(copy_current == 0, axis=2)]
+
+        for i in range(magnetic_field.shape[0]):
+            for j in range(magnetic_field.shape[1]):
+                if [i, j] not in evaluated_position.tolist():
+                    vecteur_position = np.array([i, j])
+                    rc = vecteur_position - evaluated_position
+                    rc_cart = np.zeros(rc.shape)
+                    rc_cart[:, 0], rc_cart[:, 1] = rc[:, 0]*np.cos(theta) - rc[: 1]*np.sin(theta), rc[:, 0]*np.cos(theta) - rc[: 1]*np.sin(theta)
+                    rc_norm = np.linalg.norm(rc_cart, axis=1)
+
+                    matrice_magnetic_field = np.cross(current, rc, axis=1)/rc_norm**3
+                    magnetic_field[i, j][2] = float(np.sum(matrice_magnetic_field))
+
+        return VectorField(mu_0/(4*pi)*magnetic_field)
 
     def solve(
             self,

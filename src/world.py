@@ -151,14 +151,14 @@ class World:
         else:
             if self._coordinate_system == CoordinateSystem.CARTESIAN:
                 self._potential = LaplaceEquationSolver(nb_iterations=nb_relaxation_iterations).solve(self._circuit_voltage, self._coordinate_system, delta_q1 = 1, delta_q2 = 1)
-                #self._electric_field = -self._potential.gradient()
+                self._electric_field = -self._potential.gradient()
                 self._magnetic_field = BiotSavartEquationSolver().solve(self._circuit_current, self._coordinate_system, delta_q1 = 1, delta_q2 = 1)
-                #self._energy_flux = VectorField(np.cross(self._electric_field, self._magnetic_field)/(4*np.pi*mu_0))
+                self._energy_flux = VectorField(np.cross(self._electric_field, self._magnetic_field)/(4*np.pi*mu_0))
             else:
-                #self._potential = LaplaceEquationSolver(nb_iterations=nb_relaxation_iterations).solve(self._circuit_voltage, self._coordinate_system, delta_r = 1, delta_theta = np.pi/(2*self._shape[1]))
-                #self._electric_field = -self._potential.gradient()
+                self._potential = LaplaceEquationSolver(nb_iterations=nb_relaxation_iterations).solve(self._circuit_voltage, self._coordinate_system, delta_r = 1, delta_theta = np.pi/(2*self._shape[1]))
+                self._electric_field = -self._potential.gradient()
                 self._magnetic_field = BiotSavartEquationSolver().solve(self._circuit_current, self._coordinate_system, delta_r = 1, delta_theta = np.pi/(2*self._shape[1]))
-                #self._energy_flux = VectorField(np.cross(self._electric_field, self._magnetic_field)/(4*np.pi*mu_0))
+                self._energy_flux = VectorField(np.cross(self._electric_field, self._magnetic_field)/(4*np.pi*mu_0))
 
     def show_circuit(self, nodes_position_in_figure: dict = None):
         """
