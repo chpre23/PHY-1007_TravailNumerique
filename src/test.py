@@ -3,7 +3,31 @@ import numpy as np, math
 from scipy.constants import mu_0
 from fields import*
 
-
+############ TESTS LAPLACE POLAIRE ############
+w=1
+tol=1e-6
+nr, ntheta = constant_voltage.shape
+dr2 = delta_r**2
+dtheta2 = delta_theta**2
+denom = 2*(dr2 + dtheta2)
+error = tol + 1  # initialize error larger than tol
+iteration = 0
+while error > tol and iteration < self.nb_iterations:
+    error = 0
+    for i in range(1, nr-1):
+        for j in range(1, ntheta-1):
+            left = constant_voltage[i, j-1]
+            right = constant_voltage[i, j+1]
+            up = constant_voltage[i-1, j]
+            down = constant_voltage[i+1, j]
+            old_value = constant_voltage[i, j]
+            new_value = (1-w)*old_value + w/denom*((left + right)/dtheta2 + (up + down)/dr2) # P-E un facteur de r^2 selon chatGPT
+            constant_voltage[i, j] = new_value
+            error = max(error, abs(new_value - old_value))
+    iteration += 1
+return constant_voltage
+#raise NotImplementedError
+        
 def relax(A, maxsteps, convergence):
     """
     Relaxes the matrix A until the sum of the absolute differences

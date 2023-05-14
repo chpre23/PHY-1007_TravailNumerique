@@ -1,7 +1,9 @@
 import env_examples  # Modifies path, DO NOT REMOVE
 from sympy import Symbol
-from src import Circuit, CoordinateSystem, VoltageSource, Wire, World
-
+from src.circuit import Circuit
+from src.electrical_components import VoltageSource, Wire
+from src.coordinate_and_position import CoordinateSystem
+from src.world import World
 
 if __name__ == "__main__":
     WORLD_SHAPE = (150, 150)

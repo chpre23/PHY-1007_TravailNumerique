@@ -1,5 +1,4 @@
 import numpy as np
-
 from src.circuit_node import CircuitNode
 from src.coordinate_and_position import Position
 

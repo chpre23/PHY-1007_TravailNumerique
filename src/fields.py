@@ -136,6 +136,7 @@ class VectorField(np.ndarray):
         field : VectorField
             The new vector field as a numpy array.
         """
+        print(field)
         input_dimension = len(field.shape[:-1])
         output_dimension = field.shape[-1]
 
