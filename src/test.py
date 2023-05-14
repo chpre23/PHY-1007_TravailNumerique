@@ -25,7 +25,7 @@ while error > tol and iteration < self.nb_iterations:
             constant_voltage[i, j] = new_value
             error = max(error, abs(new_value - old_value))
     iteration += 1
-return constant_voltage
+#return constant_voltage
 #raise NotImplementedError
         
 def relax(A, maxsteps, convergence):
