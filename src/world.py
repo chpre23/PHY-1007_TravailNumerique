@@ -3,11 +3,11 @@ from typing import Tuple, Union
 import numpy as np
 from scipy.constants import mu_0, pi
 
-from biot_savart_equation_solver import BiotSavartEquationSolver
-from circuit import Circuit
-from coordinate_and_position import CoordinateSystem, Position
-from fields import VectorField
-from laplace_equation_solver import LaplaceEquationSolver
+from src.biot_savart_equation_solver import BiotSavartEquationSolver
+from src.circuit import Circuit
+from src.coordinate_and_position import CoordinateSystem, Position
+from src.fields import VectorField
+from src.laplace_equation_solver import LaplaceEquationSolver
 
 
 class World:
@@ -145,7 +145,19 @@ class World:
         nb_relaxation_iterations : int
             Number of iterations performed to obtain the potential by the relaxation method (default = 1000)
         """
-        raise NotImplementedError
+        if not self.wires:
+            raise ValueError("Place at least one wire before computing the circuits' fields.")
+        else:
+            if self._coordinate_system == CoordinateSystem.CARTESIAN:
+                self._potential = LaplaceEquationSolver(nb_iterations=nb_relaxation_iterations).solve(self._circuit_voltage, self._coordinate_system, delta_q1 = 1, delta_q2 = 1)
+                #self._electric_field = -self._potential.gradient()
+                #self._magnetic_field = BiotSavartEquationSolver().solve(self._circuit_current, self._coordinate_system, delta_q1 = 1, delta_q2 = 1)
+                #self._energy_flux = VectorField(np.cross(self._electric_field, self._magnetic_field)/(4*np.pi*mu_0))
+            else:
+                self._potential = LaplaceEquationSolver(nb_iterations=nb_relaxation_iterations).solve(self._circuit_voltage, self._coordinate_system, delta_r = 1, delta_theta = np.pi/(2*self._shape[1]))
+                #self._electric_field = -self._potential.gradient()
+                #self._magnetic_field = BiotSavartEquationSolver().solve(self._circuit_current, self._coordinate_system, delta_r = 1, delta_theta = np.pi/(2*self._shape[1]))
+                #self._energy_flux = VectorField(np.cross(self._electric_field, self._magnetic_field)/(4*np.pi*mu_0))
 
     def show_circuit(self, nodes_position_in_figure: dict = None):
         """

@@ -1,7 +1,7 @@
 import numpy as np
 
-from circuit_node import CircuitNode
-from coordinate_and_position import Position
+from src.circuit_node import CircuitNode
+from src.coordinate_and_position import Position
 
 
 class ElectricalComponent:

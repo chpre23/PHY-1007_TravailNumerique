@@ -1,5 +1,4 @@
 import env_examples  # Modifies path, DO NOT REMOVE
-
 from sympy import Symbol
 
 from src import Circuit, CoordinateSystem, VoltageSource, Wire, World
@@ -35,9 +34,11 @@ if __name__ == "__main__":
     ground_position = (26, 40)
 
     circuit = Circuit(wires, ground_position)
+
     world = World(circuit=circuit, coordinate_system=CoordinateSystem.CARTESIAN, shape=WORLD_SHAPE)
+    print(world._circuit_current)
     world.show_circuit(
         {0: (26, 60), 1: (26, 74), 2: (74, 74), 3: (74, 60), 4: (74, 40), 5: (74, 26), 6: (26, 26), 7: (26, 40)}
     )
-    world.compute()
+    #world.compute()
     world.show_all()

@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 
-from circuit_node import CircuitNode
-from coordinate_and_position import Position
-from electrical_components import CurrentSource, ElectricalComponent, VoltageSource, Wire
-from fields import ScalarField, VectorField
+from src.circuit_node import CircuitNode
+from src.coordinate_and_position import Position
+from src.electrical_components import CurrentSource, ElectricalComponent, VoltageSource, Wire
+from src.fields import ScalarField, VectorField
 
 
 class Circuit:

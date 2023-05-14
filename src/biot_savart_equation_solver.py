@@ -1,8 +1,7 @@
 import numpy as np
 from scipy.constants import mu_0, pi
-
-from coordinate_and_position import CoordinateSystem
-from fields import VectorField
+from src.coordinate_and_position import CoordinateSystem
+from src.fields import VectorField
 
 
 class BiotSavartEquationSolver:
@@ -38,7 +37,40 @@ class BiotSavartEquationSolver:
             B_z(x, y) are the 3 components of the magnetic vector at a given point (x, y) in space. Note that
             B_x = B_y = 0 is always True in our 2D world.
         """
-        raise NotImplementedError
+        def compute_biot_savart(matrix, point):
+            magnetic_field = np.zeros(3)  # Initialize the magnetic field vector
+            
+            a = len(matrix)
+            b = len(matrix)
+            for i in range(len(matrix)):
+                print(len(matrix))
+                for j in range(len(matrix[i])):
+                    print(len(matrix[i]))
+                    current_element = matrix[i][j]
+                    position_vector = np.array([i*delta_x, j*delta_y, 0])  # Assuming a 2D vector field with z-component as 0
+                    
+                    # Calculate the distance between the current element and the given point
+                    distance = np.linalg.norm(point - position_vector)
+                    
+                    if distance != 0 :
+                    # Calculate the contribution to the magnetic field using the Biot-Savart law
+                        magnetic_field += np.cross(current_element, (point - position_vector)) / distance**3
+                    else:
+                        continue      
+            return magnetic_field
+        
+        magnetic_array = np.zeros((electric_current.shape[0], electric_current.shape[1], 3))
+        n = 0
+        for x in range(len(electric_current)):
+            for y in range(len(electric_current[x])):
+                if electric_current[x][y].any() == True:
+                    magnetic_array[x, y] = compute_biot_savart(electric_current, np.array([x*delta_x, y*delta_y, 0]))
+                    print('nb iterations : ', n)
+                    n += 1
+
+        Vectorfield_mag = VectorField(magnetic_array)
+        return Vectorfield_mag
+
 
     def _solve_in_polar_coordinate(
             self,
@@ -67,6 +99,7 @@ class BiotSavartEquationSolver:
             B_z(r, θ) are the 3 components of the magnetic vector at a given point (r, θ) in space. Note that
             B_r = B_θ = 0 is always True in our 2D world.
         """
+        
         raise NotImplementedError
 
     def solve(
